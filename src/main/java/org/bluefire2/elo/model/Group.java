@@ -1,9 +1,11 @@
 package org.bluefire2.elo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "PLAYERGROUP")
@@ -17,11 +19,19 @@ public class Group {
     @Getter
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "group")
     @Getter
-    private List<Game> games;
+    @JsonBackReference
+    private Collection<Player> players;
 
-    @OneToMany
-    @Getter
-    private List<Player> players;
+    public Group() {}
+
+    public Group(String name) {
+        this.players = new HashSet<>();
+        this.name = name;
+    }
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
+    }
 }
